@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The End of the Wait, The Beginning of Us</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons for elegant symbols -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Menggunakan font Playfair Display untuk judul dan Inter untuk konten */
+        :root {
+            --color-navy: #0F172A; /* slate-900 */
+            --color-accent: #818CF8; /* indigo-400 */
+            --color-text: #E2E8F0; /* slate-200 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-navy);
+            color: var(--color-text);
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar for aesthetics in dark mode */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            background-color: var(--color-accent);
+            border-radius: 10px;
+        }
+
+        body::-webkit-scrollbar-track {
+            background: var(--color-navy);
+        }
+
+        /* Efek Transisi Halus pada elemen */
+        .transition-all-smooth {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Parallax Container untuk Cover */
+        #cover-image-container {
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .parallax-bg {
+            background-image: url('https://placehold.co/1080x1350/111827/9ca3af/png?text=Date+Night+Invitation');
+            background-size: cover;
+            background-position: center;
+            height: 150%; /* Membuat gambar lebih tinggi dari container untuk efek parallax */
+            width: 100%;
+            position: absolute;
+            top: -25%; /* Memusatkan gambar */
+            transition: transform 0.1s linear; /* Parallax effect is fast */
+            filter: brightness(0.7) grayscale(0.2); /* Moody dark look */
+        }
+
+        /* Overlay untuk teks agar lebih mudah dibaca */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(1px);
+        }
+
+        /* Styling for the countdown component */
+        .countdown-item {
+            font-family: 'Playfair Display', serif;
+            background: rgba(45, 55, 72, 0.5); /* Dark background with transparency */
+            border: 1px solid var(--color-accent);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease-in-out;
+        }
+        .countdown-item:hover {
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        /* Hide content initially */
+        .hidden-content {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 1s ease-out, max-height 1s ease-out;
+        }
+
+        .visible-content {
+            opacity: 1;
+            max-height: 5000px; /* Cukup besar untuk menampilkan seluruh konten */
+        }
+
+        .btn-open {
+            background-color: var(--color-accent);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .btn-open:hover {
+            background-color: #6366F1; /* Darker indigo on hover */
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Target Date for Countdown -->
+    <input type="hidden" id="event-date" value="2026-01-08T19:00:00">
+
+    <!-- 1. COVER SECTION (Initial Screen) -->
+    <div id="initial-cover" class="relative min-h-screen flex flex-col justify-center items-center p-4 text-center">
+        <!-- Parallax Background Image -->
+        <div id="cover-image-container" class="fixed inset-0 z-0">
+            <div id="parallax-bg" class="parallax-bg"></div>
+            <div class="overlay"></div>
+        </div>
+        
+        <!-- Cover Content -->
+        <div class="relative z-10 p-8 md:p-12 bg-black bg-opacity-30 rounded-xl shadow-2xl backdrop-blur-sm max-w-sm md:max-w-md">
+            <h1 class="text-4xl md:text-6xl font-['Playfair_Display'] font-bold text-gray-100 mb-4 tracking-wider">
+                The End of the Wait, The Beginning of Us.
+            </h1>
+            <p class="text-xl md:text-2xl font-light mb-8 text-indigo-300">
+                You Are Invited!
+            </p>
+            
+            <button id="open-invitation-btn" class="btn-open text-gray-900 font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-indigo-500/50 uppercase tracking-widest text-sm">
+                OPEN INVITATION
+            </button>
+            <p id="music-indicator" class="mt-4 text-xs text-indigo-200/70 opacity-0 transition-opacity">
+                (Musik Start Automation)
+            </p>
+        </div>
+    </div>
+    
+    <!-- 2. MAIN CONTENT (Hidden until user clicks 'Buka Undangan') -->
+    <div id="main-content" class="hidden-content pt-10 pb-20">
+        
+        <!-- Countdown Timer Section -->
+        <section id="countdown" class="py-12 md:py-16 text-center">
+            <h2 class="text-3xl font-['Playfair_Display'] font-bold mb-8 text-indigo-400">I hope this one change to 00 00 00 00</h2>
+            <div id="countdown-timer" class="flex justify-center space-x-3 sm:space-x-6 px-4">
+                <!-- Days -->
+                <div class="countdown-item p-4 sm:p-6 rounded-lg text-center min-w-[70px] sm:min-w-[90px]">
+                    <div id="days" class="text-4xl sm:text-5xl font-bold">00</div>
+                    <div class="text-xs sm:text-sm uppercase mt-1">Day</div>
+                </div>
+                <!-- Hours -->
+                <div class="countdown-item p-4 sm:p-6 rounded-lg text-center min-w-[70px] sm:min-w-[90px]">
+                    <div id="hours" class="text-4xl sm:text-5xl font-bold">00</div>
+                    <div class="text-xs sm:text-sm uppercase mt-1">Hour</div>
+                </div>
+                <!-- Minutes -->
+                <div class="countdown-item p-4 sm:p-6 rounded-lg text-center min-w-[70px] sm:min-w-[90px]">
+                    <div id="minutes" class="text-4xl sm:text-5xl font-bold">00</div>
+                    <div class="text-xs sm:text-sm uppercase mt-1">Minutes</div>
+                </div>
+                <!-- Seconds -->
+                <div class="countdown-item p-4 sm:p-6 rounded-lg text-center min-w-[70px] sm:min-w-[90px]">
+                    <div id="seconds" class="text-4xl sm:text-5xl font-bold">00</div>
+                    <div class="text-xs sm:text-sm uppercase mt-1">Detik</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Event Details Section -->
+        <section id="details" class="py-12 md:py-20 px-4 max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-['Playfair_Display'] font-bold mb-6 text-indigo-400">I love You BB and before move further, Read this!</h2>
+            
+            <!-- Date Card -->
+            <div class="bg-slate-800 p-6 sm:p-8 rounded-xl shadow-lg mb-8 transition-all-smooth hover:shadow-indigo-500/30">
+                <i data-lucide="calendar" class="w-8 h-8 mx-auto mb-3 text-indigo-400"></i>
+                <h3 class="text-xl font-semibold mb-2">Date & Time</h3>
+                <p class="text-2xl font-['Playfair_Display'] font-bold text-gray-50">Thursday, 8 January 2026</p>
+                <p class="text-lg text-slate-300"> 18:00 </p>
+            </div>
+
+            <!-- Location Card -->
+            <div class="bg-slate-800 p-6 sm:p-8 rounded-xl shadow-lg transition-all-smooth hover:shadow-indigo-500/30">
+                <i data-lucide="map-pin" class="w-8 h-8 mx-auto mb-3 text-indigo-400"></i>
+                <h3 class="text-xl font-semibold mb-2">Location </h3>
+                <p class="text-2xl font-['Playfair_Display'] font-bold text-gray-50">Arundaya Resto</p>
+                <p class="text-lg text-slate-300">Kutowinangun Kidul, Tingkir, Salatiga City</p>
+                <a href="https://maps.app.goo.gl/example" target="_blank" class="inline-block mt-4 text-sm font-medium text-indigo-400 hover:text-indigo-300 border-b border-indigo-400">
+                     Google Maps
+                </a>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="py-12 md:py-20 px-4 max-w-6xl mx-auto text-center">
+            <h2 class="text-3xl font-['Playfair_Display'] font-bold mb-10 text-indigo-400">Outfit Guide</h2>
+            <!-- DITAMBAHKAN max-w-4xl dan mx-auto DI SINI UNTUK MEMASTIKAN GRID TERPUSAT -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                <div class="aspect-square bg-slate-800 rounded-lg overflow-hidden transition-transform duration-500 hover:scale-[1.02] shadow-md">
+                    <!-- CATATAN: Tautan lokal tidak berfungsi di web. Dikembalikan ke placeholder. -->
+                    <img src="c:\Users\HSE OFFICER\Downloads\lelaki-removebg-preview.png" alt="Foto Momen 1" class="w-full h-full object-cover">
+                </div>
+                <div class="aspect-square bg-slate-800 rounded-lg overflow-hidden transition-transform duration-500 hover:scale-[1.02] shadow-md">
+                    <!-- GANTI URL PLACEHOLDER INI DENGAN LINK GAMBAR PUBLIK ANDA -->
+                    <img src="c:\Users\HSE OFFICER\Downloads\kaooos-removebg-preview.png" alt="Foto Momen 2" class="w-full h-full object-cover">
+                </div>
+                <div class="aspect-square bg-slate-800 rounded-lg overflow-hidden transition-transform duration-500 hover:scale-[1.02] shadow-md">
+                    <!-- GANTI URL PLACEHOLDER INI DENGAN LINK GAMBAR PUBLIK ANDA -->
+                    <img src="c:\Users\HSE OFFICER\Downloads\rhs-removebg-preview.png" alt="Foto Momen 3" class="w-full h-full object-cover">
+                </div>
+                <div class="aspect-square bg-slate-800 rounded-lg overflow-hidden transition-transform duration-500 hover:scale-[1.02] shadow-md">
+                    <!-- GANTI URL PLACEHOLDER INI DENGAN LINK GAMBAR PUBLIK ANDA -->
+                    <img src="c:\Users\HSE OFFICER\Downloads\clotes-removebg-preview.png" alt="Foto Momen 4" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- RSVP Section (Placeholder) -->
+        <section id="rsvp" class="py-12 md:py-20 px-4 max-w-xl mx-auto text-center">
+            <h2 class="text-3xl font-['Playfair_Display'] font-bold mb-6 text-indigo-400">Come celebrate the beginning of our forever!</h2>
+            <p class="mb-8 text-slate-300">Kindly confirm your attendance by January 5, 2026.</p>
+            
+            <form class="bg-slate-800 p-6 rounded-xl shadow-xl space-y-4">
+                <input type="text" placeholder="Name" class="w-full p-3 rounded-md bg-slate-700 border border-indigo-400 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-slate-400">
+                <select class="w-full p-3 rounded-md bg-slate-700 border border-indigo-400 focus:ring-indigo-500 focus:border-indigo-500 text-white">
+                    <option value="">Chose the reason</option>
+                    <option value="hadir">Can't Wait to Celebrate!</option>
+                    <option value="tidak-hadir">I love You</option>
+                </select>
+                <textarea rows="3" placeholder="Pesan singkat untuk kami (Opsional)" class="w-full p-3 rounded-md bg-slate-700 border border-indigo-400 focus:ring-indigo-500 focus:border-indigo-500 text-white placeholder-slate-400"></textarea>
+                <button type="submit" class="w-full btn-open text-gray-900 font-semibold py-3 rounded-md shadow-md hover:shadow-indigo-500/50 uppercase tracking-widest">
+                    CONFIRM
+                </button>
+            </form>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 py-8 text-center border-t border-indigo-400/50">
+        <p class="text-sm text-slate-400">&copy; 2026  Date Night. Made by Luis Figo.</p>
+        <p class="text-xs text-slate-500 mt-2">Musik: "Romantic" oleh Bensound</p>
+    </footer>
+
+    <!-- Audio Element (Hidden) -->
+    <audio id="background-music" loop preload="auto">
+        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inisialisasi Lucide icons
+            lucide.createIcons();
+
+            const eventDateInput = document.getElementById('event-date');
+            const targetDate = new Date(eventDateInput.value).getTime();
+
+            const openBtn = document.getElementById('open-invitation-btn');
+            const initialCover = document.getElementById('initial-cover');
+            const mainContent = document.getElementById('main-content');
+            const bgMusic = document.getElementById('background-music');
+            const parallaxBg = document.getElementById('parallax-bg');
+            const musicIndicator = document.getElementById('music-indicator');
+            
+            // --- 1. Audio and Content Revelation Handler ---
+            openBtn.addEventListener('click', async () => {
+                // Tunjukkan bahwa musik sedang diproses
+                musicIndicator.classList.add('opacity-100');
+                
+                // Coba memutar musik
+                try {
+                    await bgMusic.play();
+                    console.log("Musik diputar otomatis.");
+                } catch (err) {
+                    console.error("Gagal memutar musik otomatis, menunggu interaksi pengguna lebih lanjut.", err);
+                    // Jika gagal (kebijakan browser), set volume rendah dan biarkan pengguna scroll
+                    bgMusic.volume = 0.2;
+                }
+
+                // Sembunyikan cover utama dengan transisi
+                initialCover.style.opacity = '0';
+                initialCover.style.height = '0';
+                initialCover.style.pointerEvents = 'none';
+
+                // Tampilkan konten utama setelah delay singkat
+                setTimeout(() => {
+                    mainContent.classList.remove('hidden-content');
+                    mainContent.classList.add('visible-content');
+                    // Scroll ke bagian details
+                    document.getElementById('details').scrollIntoView({ behavior: 'smooth' });
+                }, 800);
+            });
+
+            // --- 2. Countdown Timer Logic ---
+            const updateCountdown = () => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                const elements = {
+                    days: document.getElementById('days'),
+                    hours: document.getElementById('hours'),
+                    minutes: document.getElementById('minutes'),
+                    seconds: document.getElementById('seconds')
+                };
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    for (const key in elements) {
+                        elements[key].innerHTML = "00";
+                    }
+                    if (elements.days) {
+                       elements.days.closest('section').querySelector('h2').textContent = "ACARA SEDANG BERLANGSUNG!";
+                    }
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Format angka menjadi dua digit
+                elements.days.textContent = String(days).padStart(2, '0');
+                elements.hours.textContent = String(hours).padStart(2, '0');
+                elements.minutes.textContent = String(minutes).padStart(2, '0');
+                elements.seconds.textContent = String(seconds).padStart(2, '0');
+            }
+
+            // Jalankan sekali saat load dan set interval
+            updateCountdown();
+            const countdownInterval = setInterval(updateCountdown, 1000);
+
+
+            // --- 3. Parallax Effect Logic ---
+            const handleScroll = () => {
+                // Gunakan window.scrollY karena ini adalah scroll global pada body
+                const scrollPosition = window.scrollY;
+
+                // Hitung offset. Semakin kecil pembagi, semakin kuat efek parallax.
+                // Cover image bergerak ke atas 50% lebih lambat dari scroll
+                const offset = scrollPosition * 0.5; 
+                
+                // Pastikan elemen parallax ada sebelum mencoba mengubah properti
+                if (parallaxBg) {
+                    // Hanya terapkan parallax saat berada di bagian cover
+                    if (scrollPosition < window.innerHeight) {
+                         parallaxBg.style.transform = `translate3d(0, ${offset}px, 0)`;
+                    } else {
+                         // Setelah melewati cover, kembalikan posisi normal
+                         parallaxBg.style.transform = `translate3d(0, ${window.innerHeight * 0.5}px, 0)`;
+                    }
+                }
+            };
+            
+            // Pasang event listener untuk scroll
+            window.addEventListener('scroll', handleScroll);
+
+        });
+    </script>
+</body>
+</html>
